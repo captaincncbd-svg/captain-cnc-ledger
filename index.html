@@ -34,6 +34,7 @@
   <p>ইন্টারনেট কানেকশন চেক করে পেজটি রিফ্রেশ করুন। সমস্যা থাকলে অন্য ব্রাউজারে (Chrome) চেষ্টা করুন।</p>
 </div>
 <script>
+
   window.addEventListener('error', function () {
     var root = document.getElementById('root');
     var fb = document.getElementById('fallback');
@@ -57,8 +58,10 @@
   } catch (e) {
     console.error("Firebase init failed", e);
   }
+
 </script>
 <script>
+
 
 (() => {
   const { useState, useEffect, useMemo, useCallback } = React;
@@ -1061,6 +1064,64 @@
     if (!confirm) return null;
     return /* @__PURE__ */ React.createElement("div", { className: "fixed inset-0 z-50 flex items-center justify-center px-6", style: { background: "rgba(38,36,31,0.55)" } }, /* @__PURE__ */ React.createElement("div", { className: "w-full rounded-xl p-5", style: { maxWidth: 380, background: C.card } }, /* @__PURE__ */ React.createElement("p", { className: "text-sm mb-4", style: { color: C.ink } }, confirm.kind === "party" ? "\u098F\u0987 \u0996\u09BE\u09A4/\u0995\u09CD\u09B2\u09BE\u09AF\u09BC\u09C7\u09A8\u09CD\u099F \u098F\u09AC\u0982 \u098F\u09B0 \u09B8\u09AC \u09B2\u09C7\u09A8\u09A6\u09C7\u09A8 \u09AE\u09C1\u099B\u09C7 \u09AB\u09C7\u09B2\u09BE \u09B9\u09AC\u09C7\u0964 \u09A8\u09BF\u09B6\u09CD\u099A\u09BF\u09A4?" : confirm.kind === "invoice" ? "\u098F\u0987 \u0987\u09A8\u09AD\u09AF\u09BC\u09C7\u09B8\u099F\u09BF \u09AE\u09C1\u099B\u09C7 \u09AB\u09C7\u09B2\u09BE \u09B9\u09AC\u09C7\u0964 \u09A8\u09BF\u09B6\u09CD\u099A\u09BF\u09A4?" : confirm.kind === "bill" ? "\u098F\u0987 \u09AC\u09BF\u09B2\u099F\u09BF \u09AE\u09C1\u099B\u09C7 \u09AB\u09C7\u09B2\u09BE \u09B9\u09AC\u09C7\u0964 \u09A8\u09BF\u09B6\u09CD\u099A\u09BF\u09A4?" : "\u098F\u0987 \u09B2\u09C7\u09A8\u09A6\u09C7\u09A8\u099F\u09BF \u09AE\u09C1\u099B\u09C7 \u09AB\u09C7\u09B2\u09BE \u09B9\u09AC\u09C7\u0964 \u09A8\u09BF\u09B6\u09CD\u099A\u09BF\u09A4?"), /* @__PURE__ */ React.createElement("div", { className: "flex gap-2" }, /* @__PURE__ */ React.createElement("button", { onClick: onCancel, className: "flex-1 py-2.5 rounded-lg font-semibold text-[13px]", style: { background: C.paper, color: C.ink } }, "\u09AC\u09BE\u09A4\u09BF\u09B2"), /* @__PURE__ */ React.createElement("button", { onClick: onConfirm, className: "flex-1 py-2.5 rounded-lg font-semibold text-[13px]", style: { background: C.red, color: C.paper } }, "\u09AE\u09C1\u099B\u09C1\u09A8"))));
   }
+  function LoginScreen({ onLogin, error, loading }) {
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    return /* @__PURE__ */ React.createElement(
+      "div",
+      { className: "w-full h-full flex items-center justify-center py-6 px-4", style: { background: C.outer, minHeight: "100vh" } },
+      /* @__PURE__ */ React.createElement(
+        "div",
+        { className: "w-full rounded-2xl p-6", style: { maxWidth: 380, background: C.card } },
+        /* @__PURE__ */ React.createElement(
+          "div",
+          { className: "flex flex-col items-center mb-6" },
+          window.APP_LOGO_ICON && /* @__PURE__ */ React.createElement("img", { src: window.APP_LOGO_ICON, style: { width: 64, height: 64, borderRadius: 12, marginBottom: 10 } }),
+          /* @__PURE__ */ React.createElement("div", { className: "font-bold text-lg", style: { color: C.ink } }, "ক্যাপ্টেন সি এন সি লেজার"),
+          /* @__PURE__ */ React.createElement("div", { className: "text-xs mt-1", style: { color: C.inkSoft } }, "প্রবেশ করতে লগইন করুন")
+        ),
+        /* @__PURE__ */ React.createElement(
+          "div",
+          { className: "mb-3" },
+          /* @__PURE__ */ React.createElement("div", { className: "text-xs mb-1", style: { color: C.inkSoft } }, "ইমেইল"),
+          /* @__PURE__ */ React.createElement("input", {
+            type: "email",
+            value: email,
+            onChange: (e) => setEmail(e.target.value),
+            className: "w-full rounded-lg py-2.5 px-3 text-sm outline-none",
+            style: { background: C.paper, color: C.ink },
+            autoCapitalize: "none",
+            autoCorrect: "off",
+          })
+        ),
+        /* @__PURE__ */ React.createElement(
+          "div",
+          { className: "mb-4" },
+          /* @__PURE__ */ React.createElement("div", { className: "text-xs mb-1", style: { color: C.inkSoft } }, "পাসওয়ার্ড"),
+          /* @__PURE__ */ React.createElement("input", {
+            type: "password",
+            value: password,
+            onChange: (e) => setPassword(e.target.value),
+            onKeyDown: (e) => { if (e.key === "Enter" && email && password && !loading) onLogin(email, password); },
+            className: "w-full rounded-lg py-2.5 px-3 text-sm outline-none",
+            style: { background: C.paper, color: C.ink },
+          })
+        ),
+        error && /* @__PURE__ */ React.createElement("div", { className: "text-xs mb-3", style: { color: C.red } }, error),
+        /* @__PURE__ */ React.createElement(
+          "button",
+          {
+            disabled: !email || !password || loading,
+            onClick: () => onLogin(email, password),
+            className: "w-full py-3 rounded-lg text-center font-bold text-sm",
+            style: { background: email && password && !loading ? C.ink : C.line, color: email && password && !loading ? C.paper : C.inkSoft },
+          },
+          loading ? "..." : "প্রবেশ করুন"
+        )
+      )
+    );
+  }
+
   function App() {
     const [parties, setParties] = useState(() => loadKey("parties", []));
     const [transactions, setTransactions] = useState(() => loadKey("transactions", []));
@@ -1138,19 +1199,52 @@
       saveKey("transactions", next);
       firebasePush("transactions", next);
     }, []);
+    const [authUser, setAuthUser] = useState(null);
+    const [authLoading, setAuthLoading] = useState(true);
+    const [authError, setAuthError] = useState("");
+    const [loginBusy, setLoginBusy] = useState(false);
+    const firebaseEnabled = !!(window.firebaseAuth && window.firebaseDB);
     useEffect(() => {
-      if (!window.firebaseAuth || !window.firebaseDB) return;
+      if (!firebaseEnabled) { setAuthLoading(false); return; }
+      let settled = false;
+      const failSafeTimer = setTimeout(() => {
+        if (!settled) {
+          settled = true;
+          setAuthLoading(false);
+          setAuthError("সংযোগ ধীর বা ব্যর্থ হয়েছে। ইন্টারনেট চেক করে আবার চেষ্টা করুন।");
+        }
+      }, 8000);
       const unsubAuth = window.firebaseAuth.onAuthStateChanged((user) => {
+        settled = true;
+        clearTimeout(failSafeTimer);
+        setAuthUser(user);
+        setAuthLoading(false);
         if (user) {
           firebaseSync("parties", setParties);
           firebaseSync("transactions", setTransactions);
           firebaseSync("invoices", setInvoices);
           firebaseSync("bills", setBills);
         }
+      }, () => {
+        settled = true;
+        clearTimeout(failSafeTimer);
+        setAuthLoading(false);
+        setAuthError("সংযোগে সমস্যা হয়েছে। ইন্টারনেট চেক করে আবার চেষ্টা করুন।");
       });
-      window.firebaseAuth.signInAnonymously().catch((e) => console.error("firebase sign-in failed", e));
-      return () => { if (unsubAuth) unsubAuth(); };
+      return () => { clearTimeout(failSafeTimer); if (unsubAuth) unsubAuth(); };
     }, []);
+    function handleLogin(email, password) {
+      setAuthError("");
+      setLoginBusy(true);
+      window.firebaseAuth.signInWithEmailAndPassword(email, password)
+        .catch((e) => {
+          setAuthError("ইমেইল বা পাসওয়ার্ড সঠিক নয়।");
+        })
+        .finally(() => setLoginBusy(false));
+    }
+    function handleLogout() {
+      if (window.firebaseAuth) window.firebaseAuth.signOut();
+    }
     useEffect(() => {
       if (!toast) return;
       const timer = setTimeout(() => setToast((t) => t && t.id === toast.id ? null : t), 7e3);
@@ -1635,6 +1729,16 @@
       { key: "clients", label: "\u0995\u09CD\u09B2\u09BE\u09AF\u09BC\u09C7\u09A8\u09CD\u099F" },
       { key: "expenses", label: "\u0996\u09B0\u099A" }
     ];
+    if (authLoading) {
+      return /* @__PURE__ */ React.createElement(
+        "div",
+        { className: "w-full h-full flex items-center justify-center", style: { background: C.outer, minHeight: "100vh" } },
+        /* @__PURE__ */ React.createElement("span", { style: { color: C.card } }, "\u09B2\u09CB\u09A1 \u09B9\u099A\u09CD\u099B\u09C7...")
+      );
+    }
+    if (firebaseEnabled && !authUser) {
+      return /* @__PURE__ */ React.createElement(LoginScreen, { onLogin: handleLogin, error: authError, loading: loginBusy });
+    }
     return /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { id: "app-root", className: "w-full h-full flex items-center justify-center py-6 px-2", style: { background: C.outer, minHeight: "100vh" } }, /* @__PURE__ */ React.createElement(
       "div",
       {
@@ -1654,7 +1758,7 @@
         TopBar,
         {
           title: "\u0995\u09CD\u09AF\u09BE\u09AA\u09CD\u099F\u09C7\u09A8 \u09B8\u09BF \u098F\u09A8 \u09B8\u09BF \u09B2\u09C7\u099C\u09BE\u09B0",
-          right: window.APP_LOGO_ICON ? /* @__PURE__ */ React.createElement("img", { src: window.APP_LOGO_ICON, alt: "logo", style: { width: 30, height: 30, borderRadius: 8, objectFit: "cover", border: `1px solid ${C.brass}` } }) : /* @__PURE__ */ React.createElement(BookOpen, { size: 20, color: C.brass })
+          right: /* @__PURE__ */ React.createElement(React.Fragment, null, firebaseEnabled && authUser && /* @__PURE__ */ React.createElement("button", { onClick: handleLogout, className: "mr-2 px-2 py-1 rounded-lg", style: { background: C.paperDark } }, /* @__PURE__ */ React.createElement("span", { className: "text-[10px] font-semibold", style: { color: C.brass } }, "\u09B2\u0997\u0986\u0989\u099F")), window.APP_LOGO_ICON ? /* @__PURE__ */ React.createElement("img", { src: window.APP_LOGO_ICON, alt: "logo", style: { width: 30, height: 30, borderRadius: 8, objectFit: "cover", border: `1px solid ${C.brass}` } }) : /* @__PURE__ */ React.createElement(BookOpen, { size: 20, color: C.brass }))
         }
       ), /* @__PURE__ */ React.createElement("div", { className: "px-4" }, /* @__PURE__ */ React.createElement("div", { className: "flex rounded-xl p-4 mb-4", style: { background: C.card, border: `1px solid ${C.line}` } }, /* @__PURE__ */ React.createElement("div", { className: "flex-1 flex flex-col items-center gap-0.5" }, /* @__PURE__ */ React.createElement(TrendingUp, { size: 16, color: C.green }), /* @__PURE__ */ React.createElement("span", { className: "text-[11px]", style: { color: C.inkSoft } }, "\u0986\u09AF\u09BC"), /* @__PURE__ */ React.createElement("span", { className: "font-bold text-sm", style: { color: C.green } }, fmtTaka(totals.income))), /* @__PURE__ */ React.createElement("div", { className: "flex-1 flex flex-col items-center gap-0.5", style: { borderLeft: `1px solid ${C.line}`, borderRight: `1px solid ${C.line}` } }, /* @__PURE__ */ React.createElement(TrendingDown, { size: 16, color: C.red }), /* @__PURE__ */ React.createElement("span", { className: "text-[11px]", style: { color: C.inkSoft } }, "\u09AC\u09CD\u09AF\u09AF\u09BC"), /* @__PURE__ */ React.createElement("span", { className: "font-bold text-sm", style: { color: C.red } }, fmtTaka(totals.expense))), /* @__PURE__ */ React.createElement("div", { className: "flex-1 flex flex-col items-center gap-0.5" }, /* @__PURE__ */ React.createElement(SavingsIcon, { size: 17, color: C.brass }), /* @__PURE__ */ React.createElement("span", { className: "text-[11px]", style: { color: C.inkSoft } }, "\u09B8\u099E\u09CD\u099A\u09AF\u09BC"), /* @__PURE__ */ React.createElement("span", { className: "font-bold text-sm", style: { color: totals.savings >= 0 ? C.ink : C.red } }, totals.savings < 0 ? "-" : "", fmtTaka(totals.savings)))), /* @__PURE__ */ React.createElement("div", { className: "flex gap-2 mb-4" }, /* @__PURE__ */ React.createElement("button", { onClick: () => openAddTxn("income"), className: "flex-1 py-2.5 rounded-lg", style: { background: C.greenSoft } }, /* @__PURE__ */ React.createElement("span", { className: "font-semibold text-[13px]", style: { color: C.green } }, "+ \u0986\u09AF\u09BC \u09AF\u09CB\u0997 \u0995\u09B0\u09C1\u09A8")), /* @__PURE__ */ React.createElement("button", { onClick: () => openAddTxn("expense"), className: "flex-1 py-2.5 rounded-lg", style: { background: C.redSoft } }, /* @__PURE__ */ React.createElement("span", { className: "font-semibold text-[13px]", style: { color: C.red } }, "+ \u09AC\u09CD\u09AF\u09AF\u09BC \u09AF\u09CB\u0997 \u0995\u09B0\u09C1\u09A8"))), (rankedClients.length > 0 || rankedExpenses.length > 0) && /* @__PURE__ */ React.createElement("div", { className: "grid grid-cols-2 gap-2 mb-4" }, /* @__PURE__ */ React.createElement("div", { className: "rounded-xl p-3", style: { background: C.card, border: `1px solid ${C.line}` } }, /* @__PURE__ */ React.createElement("div", { className: "flex items-center justify-between mb-1 gap-1" }, /* @__PURE__ */ React.createElement("span", { className: "text-[11px] font-semibold", style: { color: C.ink } }, "\u0995\u09CD\u09B2\u09BE\u09AF\u09BC\u09C7\u09A8\u09CD\u099F"), /* @__PURE__ */ React.createElement("div", { className: "flex items-center gap-1" }, /* @__PURE__ */ React.createElement(
         "button",
@@ -2055,6 +2159,7 @@
   const root = ReactDOM.createRoot(document.getElementById("root"));
   root.render(/* @__PURE__ */ React.createElement(App, null));
 })();
+
 
 
 </script>
