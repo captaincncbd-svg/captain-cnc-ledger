@@ -743,12 +743,14 @@
   }
   function PartyFormModal({ open, mode, type, initial, onClose, onSave }) {
     const [name, setName] = useState("");
+    const [companyName, setCompanyName] = useState("");
     const [photo, setPhoto] = useState(null);
     const [phone, setPhone] = useState("");
     const [address, setAddress] = useState("");
     useEffect(() => {
       if (open) {
         setName((initial == null ? void 0 : initial.name) || "");
+        setCompanyName((initial == null ? void 0 : initial.companyName) || "");
         setPhoto((initial == null ? void 0 : initial.photo) || null);
         setPhone((initial == null ? void 0 : initial.phone) || "");
         setAddress((initial == null ? void 0 : initial.address) || "");
@@ -765,7 +767,7 @@
       e.target.value = "";
     }
     function submit() {
-      onSave({ name: name.trim(), photo, phone: phone.trim(), address: address.trim() });
+      onSave({ name: name.trim(), companyName: companyName.trim(), photo, phone: phone.trim(), address: address.trim() });
     }
     return /* @__PURE__ */ React.createElement("div", { className: "fixed inset-0 z-50 flex items-end justify-center", style: { background: "rgba(38,36,31,0.45)" }, onClick: onClose }, /* @__PURE__ */ React.createElement(
       "div",
@@ -786,6 +788,16 @@
             if (e.key === "Enter" && name.trim()) submit();
           },
           placeholder: partyType === "client" ? "\u0995\u09CD\u09B2\u09BE\u09AF\u09BC\u09C7\u09A8\u09CD\u099F\u09C7\u09B0 \u09A8\u09BE\u09AE" : "\u0996\u09BE\u09A4\u09C7\u09B0 \u09A8\u09BE\u09AE \u09AC\u09BE \u09AC\u09CD\u09AF\u0995\u09CD\u09A4\u09BF\u09B0 \u09A8\u09BE\u09AE",
+          className: "w-full rounded-lg py-2.5 px-3 text-sm outline-none",
+          style: { background: C.paper, color: C.ink }
+        }
+      )),
+      /* @__PURE__ */ React.createElement("div", { className: "mb-3" }, /* @__PURE__ */ React.createElement("div", { className: "text-xs mb-1", style: { color: C.inkSoft } }, "\u0995\u09CB\u09AE\u09CD\u09AA\u09BE\u09A8\u09BF\u09B0 \u09A8\u09BE\u09AE (\u0990\u099A\u09CD\u099B\u09BF\u0995)"), /* @__PURE__ */ React.createElement(
+        "input",
+        {
+          value: companyName,
+          onChange: (e) => setCompanyName(e.target.value),
+          placeholder: "\u0995\u09CB\u09AE\u09CD\u09AA\u09BE\u09A8\u09BF\u09B0 \u09A8\u09BE\u09AE \u09B2\u09BF\u0996\u09C1\u09A8",
           className: "w-full rounded-lg py-2.5 px-3 text-sm outline-none",
           style: { background: C.paper, color: C.ink }
         }
@@ -1569,9 +1581,9 @@
     }
     function savePartyForm(data) {
       if (partyFormModal.mode === "edit") {
-        persistParties(parties.map((p) => p.id === partyFormModal.initial.id ? { ...p, name: data.name, photo: data.photo, phone: data.phone, address: data.address } : p));
+        persistParties(parties.map((p) => p.id === partyFormModal.initial.id ? { ...p, name: data.name, companyName: data.companyName, photo: data.photo, phone: data.phone, address: data.address } : p));
       } else {
-        const np = { id: uid(), type: partyFormModal.type, name: data.name, photo: data.photo, phone: data.phone, address: data.address, createdAt: Date.now() };
+        const np = { id: uid(), type: partyFormModal.type, name: data.name, companyName: data.companyName, photo: data.photo, phone: data.phone, address: data.address, createdAt: Date.now() };
         persistParties([...parties, np]);
         if (partyFormModal.forTxn) {
           setQuickCreatedParty({ id: np.id, token: uid() });
@@ -2086,7 +2098,7 @@
           index: i + 1,
           avatar: p.photo,
           left: p.name,
-          sub: p.phone || void 0,
+          sub: p.companyName || p.phone || void 0,
           right: fmtTaka(totals.byParty[p.id] || 0),
           color: view === "clients" ? C.green : C.red,
           onClick: () => {
@@ -2101,7 +2113,7 @@
           onBack: () => setView(selectedParty.type === "client" ? "clients" : "expenses"),
           right: /* @__PURE__ */ React.createElement("div", { className: "flex items-center gap-3" }, /* @__PURE__ */ React.createElement("button", { onClick: () => printParty(selectedParty), className: "p-1" }, /* @__PURE__ */ React.createElement(FileText, { size: 16, color: C.brass })), /* @__PURE__ */ React.createElement("button", { onClick: () => openEditParty(selectedParty), className: "p-1" }, /* @__PURE__ */ React.createElement(Edit, { size: 16, color: C.brass })), /* @__PURE__ */ React.createElement("button", { onClick: () => setConfirmDelete({ kind: "party", id: selectedParty.id }), className: "p-1" }, /* @__PURE__ */ React.createElement(Trash2, { size: 17, color: C.red })))
         }
-      ), /* @__PURE__ */ React.createElement("div", { className: "px-4" }, (selectedParty.phone || selectedParty.address) && /* @__PURE__ */ React.createElement("div", { className: "-mt-2 mb-3" }, selectedParty.phone && /* @__PURE__ */ React.createElement("div", { className: "text-xs", style: { color: C.inkSoft } }, "\u{1F4DE} ", selectedParty.phone), selectedParty.address && /* @__PURE__ */ React.createElement("div", { className: "text-xs mt-0.5", style: { color: C.inkSoft } }, "\u{1F4CD} ", selectedParty.address)), /* @__PURE__ */ React.createElement("div", { className: "rounded-xl p-4 mb-4 flex flex-col items-center", style: { background: C.card, border: `1px solid ${C.line}` } }, /* @__PURE__ */ React.createElement("div", { className: "rounded-full overflow-hidden flex items-center justify-center mb-2", style: { width: 56, height: 56, background: C.paper, border: `2px solid ${C.brass}` } }, selectedParty.photo ? /* @__PURE__ */ React.createElement("img", { src: selectedParty.photo, className: "w-full h-full object-cover" }) : /* @__PURE__ */ React.createElement("span", { className: "font-bold text-xl", style: { color: C.inkSoft } }, selectedParty.name.charAt(0))), /* @__PURE__ */ React.createElement("span", { className: "text-[11px]", style: { color: C.inkSoft } }, "\u09AE\u09CB\u099F ", selectedParty.type === "client" ? "\u09AA\u09CD\u09B0\u09BE\u09AA\u09CD\u09A4" : "\u0996\u09B0\u099A"), /* @__PURE__ */ React.createElement("span", { className: "font-bold text-2xl mt-1", style: { color: selectedParty.type === "client" ? C.green : C.red } }, fmtTaka(totals.byParty[selectedParty.id] || 0))), /* @__PURE__ */ React.createElement(
+      ), /* @__PURE__ */ React.createElement("div", { className: "px-4" }, (selectedParty.companyName || selectedParty.phone || selectedParty.address) && /* @__PURE__ */ React.createElement("div", { className: "-mt-2 mb-3" }, selectedParty.companyName && /* @__PURE__ */ React.createElement("div", { className: "text-xs font-semibold", style: { color: C.ink } }, "\u{1F3E2} ", selectedParty.companyName), selectedParty.phone && /* @__PURE__ */ React.createElement("div", { className: "text-xs", style: { color: C.inkSoft } }, "\u{1F4DE} ", selectedParty.phone), selectedParty.address && /* @__PURE__ */ React.createElement("div", { className: "text-xs mt-0.5", style: { color: C.inkSoft } }, "\u{1F4CD} ", selectedParty.address)), /* @__PURE__ */ React.createElement("div", { className: "rounded-xl p-4 mb-4 flex flex-col items-center", style: { background: C.card, border: `1px solid ${C.line}` } }, /* @__PURE__ */ React.createElement("div", { className: "rounded-full overflow-hidden flex items-center justify-center mb-2", style: { width: 56, height: 56, background: C.paper, border: `2px solid ${C.brass}` } }, selectedParty.photo ? /* @__PURE__ */ React.createElement("img", { src: selectedParty.photo, className: "w-full h-full object-cover" }) : /* @__PURE__ */ React.createElement("span", { className: "font-bold text-xl", style: { color: C.inkSoft } }, selectedParty.name.charAt(0))), /* @__PURE__ */ React.createElement("span", { className: "text-[11px]", style: { color: C.inkSoft } }, "\u09AE\u09CB\u099F ", selectedParty.type === "client" ? "\u09AA\u09CD\u09B0\u09BE\u09AA\u09CD\u09A4" : "\u0996\u09B0\u099A"), /* @__PURE__ */ React.createElement("span", { className: "font-bold text-2xl mt-1", style: { color: selectedParty.type === "client" ? C.green : C.red } }, fmtTaka(totals.byParty[selectedParty.id] || 0))), /* @__PURE__ */ React.createElement(
         "button",
         {
           onClick: () => openAddTxn(selectedParty.type === "client" ? "income" : "expense", selectedParty),
