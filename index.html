@@ -54,6 +54,7 @@
 };
     firebase.initializeApp(firebaseConfig);
     window.firebaseAuth = firebase.auth();
+    window.firebaseAuth.setPersistence(firebase.auth.Auth.Persistence.NONE).catch(function(e) { console.error("Firebase persistence set failed", e); });
     window.firebaseDB = firebase.database();
   } catch (e) {
     console.error("Firebase init failed", e);
@@ -1388,7 +1389,7 @@
         unsubList.push(firebaseSync("years/" + selectedYear + "/bills", setBills));
       }
       return () => { unsubList.forEach((fn) => fn && fn()); };
-    }, [selectedYear, authUser, firebaseEnabled]);
+    }, [selectedYear, authUser && authUser.uid, firebaseEnabled]);
     useEffect(() => {
       if (!toast) return;
       const timer = setTimeout(() => setToast((t) => t && t.id === toast.id ? null : t), 7e3);
