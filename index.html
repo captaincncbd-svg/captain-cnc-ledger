@@ -65,7 +65,7 @@
 
 
 (() => {
-  const { useState, useEffect, useMemo, useCallback } = React;
+  const { useState, useEffect, useMemo, useCallback, useRef } = React;
   function Icon({ size = 20, color = "currentColor", children, viewBox = "0 0 24 24" }) {
     return /* @__PURE__ */ React.createElement(
       "svg",
@@ -194,6 +194,54 @@
   function firebasePush(key, next) {
     if (window.firebaseDB) {
       window.firebaseDB.ref(key).set(next).catch((e) => console.error("firebase write failed", key, e));
+    }
+  }
+  function firebaseDiffPush(key, oldArr, newArr) {
+    if (!window.firebaseDB) return;
+    const oldMap = {};
+    (oldArr || []).forEach((it) => { if (it && it.id) oldMap[it.id] = it; });
+    const newMap = {};
+    (newArr || []).forEach((it) => { if (it && it.id) newMap[it.id] = it; });
+    const updates = {};
+    let hasChange = false;
+    Object.keys(newMap).forEach((id) => {
+      if (JSON.stringify(oldMap[id]) !== JSON.stringify(newMap[id])) {
+        updates[id] = newMap[id];
+        hasChange = true;
+      }
+    });
+    Object.keys(oldMap).forEach((id) => {
+      if (!(id in newMap)) {
+        updates[id] = null;
+        hasChange = true;
+      }
+    });
+    if (hasChange) {
+      window.firebaseDB.ref(key).update(updates).catch((e) => console.error("firebase diff write failed", key, e));
+    }
+  }
+  function firebaseDiffPush(key, oldArr, newArr) {
+    if (!window.firebaseDB) return;
+    const oldMap = {};
+    (oldArr || []).forEach((it) => { if (it && it.id) oldMap[it.id] = it; });
+    const newMap = {};
+    (newArr || []).forEach((it) => { if (it && it.id) newMap[it.id] = it; });
+    const updates = {};
+    let hasChange = false;
+    Object.keys(newMap).forEach((id) => {
+      if (JSON.stringify(oldMap[id]) !== JSON.stringify(newMap[id])) {
+        updates[id] = newMap[id];
+        hasChange = true;
+      }
+    });
+    Object.keys(oldMap).forEach((id) => {
+      if (!(id in newMap)) {
+        updates[id] = null;
+        hasChange = true;
+      }
+    });
+    if (hasChange) {
+      window.firebaseDB.ref(key).update(updates).catch((e) => console.error("firebase update failed", key, e));
     }
   }
   function TopBar({ title, onBack, right }) {
@@ -1273,17 +1321,27 @@
     const [partyRepMonths, setPartyRepMonths] = useState([]);
     const [partyRepCalOpen, setPartyRepCalOpen] = useState(false);
     const [partyRepMonthOpen, setPartyRepMonthOpen] = useState(false);
+    const partiesRef = useRef([]);
+    useEffect(() => { partiesRef.current = parties; }, [parties]);
+    const transactionsRef = useRef([]);
+    useEffect(() => { transactionsRef.current = transactions; }, [transactions]);
+    const invoicesRef = useRef([]);
+    useEffect(() => { invoicesRef.current = invoices; }, [invoices]);
+    const billsRef = useRef([]);
+    useEffect(() => { billsRef.current = bills; }, [bills]);
     const persistInvoices = useCallback((next) => {
       setInvoices(next);
       const yk = "years/" + selectedYear + "/invoices";
       saveKey(yk, next);
-      firebasePush(yk, next);
+      firebaseDiffPush(yk, invoicesRef.current, next);
+      invoicesRef.current = next;
     }, [selectedYear]);
     const persistBills = useCallback((next) => {
       setBills(next);
       const yk = "years/" + selectedYear + "/bills";
       saveKey(yk, next);
-      firebasePush(yk, next);
+      firebaseDiffPush(yk, billsRef.current, next);
+      billsRef.current = next;
     }, [selectedYear]);
     const [viewImage, setViewImage] = useState(null);
     const [dashboardMonth, setDashboardMonth] = useState("all");
@@ -1309,13 +1367,15 @@
       setParties(next);
       const yk = "years/" + selectedYear + "/parties";
       saveKey(yk, next);
-      firebasePush(yk, next);
+      firebaseDiffPush(yk, partiesRef.current, next);
+      partiesRef.current = next;
     }, [selectedYear]);
     const persistTxns = useCallback((next) => {
       setTransactions(next);
       const yk = "years/" + selectedYear + "/transactions";
       saveKey(yk, next);
-      firebasePush(yk, next);
+      firebaseDiffPush(yk, transactionsRef.current, next);
+      transactionsRef.current = next;
     }, [selectedYear]);
     const [authUser, setAuthUser] = useState(null);
     const [authLoading, setAuthLoading] = useState(true);
